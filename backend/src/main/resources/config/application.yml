@@ -1,0 +1,95 @@
+server:
+  port: 8088
+
+# JWT配置
+jwt:
+  secret: your-secret-key-here-must-be-very-long-and-safe
+  expiration: 86400 # 24小时，单位：秒
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/testplatform?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 连接池配置
+      initial-size: 20
+      max-active: 50
+      min-idle: 10
+      max-wait: 60000
+      # 连接检测配置
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 检测间隔和超时时间
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      # 监控配置
+      filters: stat,wall
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: admin
+        login-password: admin
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # Redis连接池配置
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+      # 连接超时配置
+      timeout: 5000
+      # 默认使用0号数据库
+      database: 0
+
+# MyBatis Plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+  global-config:
+    db-config:
+      id-type: AUTO
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+# Knife4j配置
+knife4j:
+  enable: true
+  openapi:
+    title: 测试平台API文档
+    description: 测试平台后端API接口文档
+    version: 1.0.0
+    concat: test-platform@example.com
+
+# 日志配置
+logging:
+  level:
+    com.testplatform: debug
+    org.springframework.security: debug
+
+# 应用配置
+app:
+  jwt:
+    secret: testplatform2024secretkey
+    expiration: 86400000 # 24小时
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:8080

@@ -1,0 +1,54 @@
+// 主题色渐变
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-button: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+$gradient-button-hover: linear-gradient(90deg, #5a6fd6 0%, #6a4494 100%);
+
+// 背景色
+$background-base: #f5f7fa;
+$background-white: rgba(255, 255, 255, 0.9);
+$background-card: rgba(255, 255, 255, 0.8);
+
+// 毛玻璃效果
+$backdrop-blur: blur(10px);
+
+// 阴影效果
+$box-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
+$box-shadow-input: 0 2px 12px rgba(0, 0, 0, 0.04);
+
+// 圆角
+$border-radius-card: 16px;
+$border-radius-button: 8px;
+$border-radius-input: 8px;
+
+// 组件尺寸
+$input-height: 44px;
+$button-height: 44px;
+
+// 字体大小
+$font-size-title: 28px;
+$font-size-subtitle: 16px;
+
+// Element Plus 组件样式变量
+:root {
+  --el-color-primary: #667eea;
+  --el-menu-bg-color: transparent;
+  --el-menu-text-color: #606266;
+  --el-menu-hover-bg-color: rgba(255, 255, 255, 0.1);
+  --el-menu-active-color: #667eea;
+  
+  // 输入框样式
+  --el-input-height: #{$input-height};
+  --el-input-border-radius: #{$border-radius-input};
+  --el-input-bg-color: #{$background-card};
+  --el-input-border-color: transparent;
+  --el-input-hover-border-color: var(--el-color-primary);
+  --el-input-focus-border-color: var(--el-color-primary);
+  
+  // 按钮样式
+  --el-button-height: #{$button-height};
+  --el-button-border-radius: #{$border-radius-button};
+  --el-button-primary-bg-color: #{$gradient-button};
+  --el-button-primary-border-color: transparent;
+  --el-button-hover-bg-color: #{$gradient-button-hover};
+  --el-button-hover-border-color: transparent;
+}
