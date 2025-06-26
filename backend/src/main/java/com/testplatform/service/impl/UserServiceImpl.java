@@ -46,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .setIssuedAt(new Date())
                 .setId(user.getId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(SignatureAlgorithm.HS256, "secret")
+                .signWith(SignatureAlgorithm.HS256, "testplatform2024secretkey")
                 .compact();
         redisTemplate.opsForValue().set("token", token);
         // 创建包含 token 的返回数据
