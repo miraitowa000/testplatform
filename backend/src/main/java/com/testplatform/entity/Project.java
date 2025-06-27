@@ -20,10 +20,21 @@ public class Project {
     
     private String description;
     
+    @TableField(exist = false)
     private Integer status;
     
     @TableField("owner_id")
     private Long ownerId;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @TableField("start_time")
+    private Date startTime;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @TableField("end_time")
+    private Date endTime;
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -34,4 +45,20 @@ public class Project {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("update_time")
     private Date updateTime;
+    
+    public Integer getStatus() {
+        Date now = new Date();
+        
+        if (startTime == null || endTime == null) {
+            return 0; // 未开始
+        }
+        
+        if (startTime.after(now)) {
+            return 0; // 未开始
+        } else if (startTime.before(now) && endTime.after(now)) {
+            return 1; // 进行中
+        } else {
+            return 2; // 已完成
+        }
+    }
 }

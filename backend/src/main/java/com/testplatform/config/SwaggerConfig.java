@@ -17,9 +17,9 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         // 文档标题
-                        .title("Wiki系统API文档")
+                        .title("测试平台API文档")
                         // 文档描述
-                        .description("Wiki系统接口文档")
+                        .description("测试平台接口文档")
                         // 文档版本
                         .version("1.0.0")
                         // 联系人信息
