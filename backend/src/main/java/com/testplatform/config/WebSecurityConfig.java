@@ -34,7 +34,8 @@ public class WebSecurityConfig {
             .httpBasic().disable() // 禁用HTTP Basic认证
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 使用无状态会话
             .and()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 添加JWT过滤器
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // 添加JWT过滤器
+            .anonymous(); // 允许匿名访问
 
         return http.build();
     }

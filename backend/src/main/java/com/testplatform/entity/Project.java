@@ -20,7 +20,6 @@ public class Project {
     
     private String description;
     
-    @TableField(exist = false)
     private Integer status;
     
     @TableField("owner_id")
