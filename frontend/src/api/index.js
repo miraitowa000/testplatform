@@ -125,7 +125,7 @@ const statsApi = {
   // 获取项目总览数据
   getDashboardStats() {
     return request({
-      url: '/stats/dashboard',
+      url: '/dashboard/overview',
       method: 'get'
     })
   },
@@ -158,6 +158,8 @@ const userApi = {
       data
     })
   },
+
+  // 退出登录
   logout() {
     return request({
       url: '/user/logout',

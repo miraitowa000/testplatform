@@ -30,7 +30,7 @@ request.interceptors.response.use(
     const res = response.data
     // 根据后端接口返回格式处理响应
     if (res.code === 200 || res.code === 0) { // 成功状态码为200或0
-      return res.data
+      return res
     } else {
       const errorMsg = res.msg || res.message || '请求失败'
       return Promise.reject(new Error(errorMsg))

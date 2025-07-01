@@ -70,7 +70,7 @@ const handleDropdown = async (command) => {
         />
         <div class="header-right">
           <el-dropdown @command="handleDropdown">
-            <el-avatar :size="32" />
+            <el-avatar :size="32" src="/src/assets/default-avatar.svg" class="user-avatar" />
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="profile">个人信息</el-dropdown-item>
@@ -121,6 +121,18 @@ const handleDropdown = async (command) => {
   display: flex;
   align-items: center;
   gap: 20px;
+
+  .user-avatar {
+    cursor: pointer;
+    background: $background-white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
 .main {

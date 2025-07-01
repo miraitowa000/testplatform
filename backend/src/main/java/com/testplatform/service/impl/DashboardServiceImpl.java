@@ -35,15 +35,15 @@ public class DashboardServiceImpl implements DashboardService {
         
         // 1. 项目统计
         Map<String, Object> projectStats = getProjectStatistics();
-        overview.put("projectStatistics", projectStats);
+        overview.put("projectStats", projectStats);
         
         // 2. 测试统计
         Map<String, Object> testStats = getTestStatistics();
-        overview.put("testStatistics", testStats);
+        overview.put("testCaseStats", testStats);
         
         // 3. 缺陷统计
         Map<String, Object> defectStats = getDefectStatistics();
-        overview.put("defectStatistics", defectStats);
+        overview.put("bugStats", defectStats);
         
         return new ResultVO(200, "数据获取成功", overview);
     }
