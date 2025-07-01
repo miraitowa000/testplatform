@@ -27,11 +27,11 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    
+
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
-        "/api/user/login",
-        "/api/user/register",
-        "/api/user/logout"
+            "/api/user/login",
+            "/api/user/register",
+            "/api/user/logout"
     );
 
     @Autowired
@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void handleAuthenticationError(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        
+
         ResultVO errorResponse = new ResultVO(401, message, null);
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
