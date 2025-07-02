@@ -27,7 +27,7 @@ public class ProjectController {
             "- 开始时间 > 当前时间：未开始(0)\n" +
             "- 开始时间 ≤ 当前时间 且 结束时间 > 当前时间：进行中(1)\n" +
             "- 开始时间 < 当前时间 且 结束时间 ≤ 当前时间：已完成(2)")
-    @PostMapping
+    @PostMapping("/create")
     public ResultVO createProject(@Valid @RequestBody ProjectDTO projectDTO) {
         return projectService.createProject(projectDTO);
     }

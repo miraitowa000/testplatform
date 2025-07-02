@@ -30,10 +30,14 @@ const handleLogin = async () => {
     if (valid) {
       try {
         const res = await userApi.login(form.value)
-        if (res.token) {
-          localStorage.setItem('token', res.token)
+        console.log('登录返回：', res)
+        const token = res.data?.token
+        if (token) {
+          localStorage.setItem('token', token)
           ElMessage.success('登录成功')
           await router.push('/dashboard')
+        } else {
+          ElMessage.error('未获取到 token，登录失败')
         }
       } catch (error) {
         console.error('登录失败:', error)

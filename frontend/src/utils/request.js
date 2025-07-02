@@ -28,6 +28,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     const res = response.data
+    console.log('Response:', res)
     // 根据后端接口返回格式处理响应
     if (res.code === 200 || res.code === 0) { // 成功状态码为200或0
       return res
