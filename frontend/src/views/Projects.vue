@@ -52,7 +52,7 @@ const handleSubmit = async () => {
     dialogVisible.value = false
     ElMessage.success('项目创建成功')
     // 清空表单
-    projectForm.value = { name: '', description: '', startDate: '', endDate: '' }
+    projectForm.value = { name: '', description: '', startTime: '', endTime: '' }
   } catch (error) {
     ElMessage.error(error.message || '项目创建失败')
   }
@@ -131,13 +131,13 @@ const handleSubmit = async () => {
         </el-form-item>
         <el-form-item label="起止时间">
           <el-date-picker
-            v-model="projectForm.startDate"
+            v-model="projectForm.startTime"
             type="date"
             placeholder="开始日期"
             style="margin-right: 10px"
           />
           <el-date-picker
-            v-model="projectForm.endDate"
+            v-model="projectForm.endTime"
             type="date"
             placeholder="结束日期"
           />
