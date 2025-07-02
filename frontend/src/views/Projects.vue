@@ -28,8 +28,8 @@ const dialogVisible = ref(false)
 const projectForm = ref({
   name: '',
   description: '',
-  startDate: '',
-  endDate: ''
+  startTime: '',
+  endTime: ''
 })
 
 const handleAdd = () => {
@@ -42,9 +42,9 @@ const handleSubmit = async () => {
     const formData = {
       name: projectForm.value.name,
       description: projectForm.value.description,
-      startDate: projectForm.value.startDate,
-      endDate: projectForm.value.endDate,
-      owner_id: user_id
+      startTime: projectForm.value.startTime,
+      endTime: projectForm.value.endTime,
+      ownerId: user_id
     }
     const res = await projectApi.createProject(formData)
     // 假设后端返回新项目数据在 res.data
@@ -90,11 +90,11 @@ const handleSubmit = async () => {
           <div class="date-section">
             <div class="date-item">
               <span class="label">开始日期</span>
-              <span>{{ project.startDate }}</span>
+              <span>{{ project.startTime }}</span>
             </div>
             <div class="date-item">
               <span class="label">结束日期</span>
-              <span>{{ project.endDate }}</span>
+              <span>{{ project.endTime }}</span>
             </div>
           </div>
           
