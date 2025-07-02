@@ -1,28 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { projectApi } from '@/api'
 
-const projects = ref([
-  {
-    id: 1,
-    name: '电商系统测试项目',
-    description: '电商平台核心功能测试',
-    status: '进行中',
-    progress: 45,
-    startDate: '2024-01-01',
-    endDate: '2024-06-30'
-  },
-  {
-    id: 2,
-    name: '支付系统升级测试',
-    description: '支付系统新功能测试',
-    status: '规划中',
-    progress: 0,
-    startDate: '2024-02-01',
-    endDate: '2024-04-30'
-  }
-])
+const projects = ref([])
 
 const dialogVisible = ref(false)
 const projectForm = ref({
@@ -57,6 +38,33 @@ const handleSubmit = async () => {
     ElMessage.error(error.message || '项目创建失败')
   }
 }
+
+const statusText = status => {
+  switch (status) {
+    case 0: return '未开始'
+    case 1: return '进行中'
+    case 2: return '已完成'
+    default: return '未知'
+  }
+}
+const statusTagType = status => {
+  switch (status) {
+    case 0: return 'info'
+    case 1: return 'success'
+    case 2: return 'default'
+    default: return 'info'
+  }
+}
+
+onMounted(async () => {
+  try {
+    const res = await projectApi.getProjects()
+    // 假设后端返回项目数组在 res.data
+    projects.value = res.data || []
+  } catch (error) {
+    ElMessage.error('获取项目列表失败')
+  }
+})
 </script>
 
 <template>
@@ -73,8 +81,8 @@ const handleSubmit = async () => {
         <template #header>
           <div class="card-header">
             <h3>{{ project.name }}</h3>
-            <el-tag :type="project.status === '进行中' ? 'success' : 'info'">
-              {{ project.status }}
+            <el-tag :type="statusTagType(project.status)">
+              {{ statusText(project.status) }}
             </el-tag>
           </div>
         </template>

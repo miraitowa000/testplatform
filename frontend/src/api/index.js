@@ -5,7 +5,7 @@ const projectApi = {
   // 获取项目列表
   getProjects() {
     return request({
-      url: '/projects',
+      url: '/projects/list',
       method: 'get'
     })
   },
