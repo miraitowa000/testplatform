@@ -56,6 +56,16 @@ const statusTagType = status => {
   }
 }
 
+const getProgress = (project) => {
+  const start = new Date(project.startTime).getTime()
+  const end = new Date(project.endTime).getTime()
+  const now = Date.now()
+  if (!start || !end || end <= start) return 0
+  if (now <= start) return 0
+  if (now >= end) return 100
+  return Math.round(((now - start) / (end - start)) * 100)
+}
+
 onMounted(async () => {
   try {
     const res = await projectApi.getProjects()
@@ -92,7 +102,7 @@ onMounted(async () => {
           
           <div class="progress-section">
             <span class="label">项目进度</span>
-            <el-progress :percentage="project.progress" />
+            <el-progress :percentage="getProgress(project)" />
           </div>
           
           <div class="date-section">

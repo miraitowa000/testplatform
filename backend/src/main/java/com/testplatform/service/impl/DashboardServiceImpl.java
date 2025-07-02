@@ -57,19 +57,23 @@ public class DashboardServiceImpl implements DashboardService {
 
         // 统计项目状态
         int totalProjects = projects.size();
+        int NonStartProjects = 0;
         int inProgressProjects = 0;
         int completedProjects = 0;
 
         for (Project project : projects) {
-            if (project.getStartTime().before(now) && project.getEndTime().after(now)) {
+            if (project.getStatus() == 0){
+                NonStartProjects++;
+            }else if (project.getStatus() == 1){
                 inProgressProjects++;
-            } else if (project.getEndTime().before(now)) {
+            } else if (project.getStatus() == 2){
                 completedProjects++;
             }
         }
 
         Map<String, Object> statistics = new HashMap<>();
         statistics.put("total", totalProjects);
+        statistics.put("notStarted", NonStartProjects);
         statistics.put("ongoing", inProgressProjects);
         statistics.put("completed", completedProjects);
 

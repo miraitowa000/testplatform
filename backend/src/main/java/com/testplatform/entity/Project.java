@@ -44,20 +44,5 @@ public class Project {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("update_time")
     private Date updateTime;
-    
-    public Integer getStatus() {
-        Date now = new Date();
-        
-        if (startTime == null || endTime == null) {
-            return 0; // 未开始
-        }
-        
-        if (startTime.after(now)) {
-            return 0; // 未开始
-        } else if (startTime.before(now) && endTime.after(now)) {
-            return 1; // 进行中
-        } else {
-            return 2; // 已完成
-        }
-    }
+
 }

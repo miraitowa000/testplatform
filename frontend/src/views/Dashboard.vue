@@ -153,6 +153,10 @@ onBeforeUnmount(() => {
               <span class="value highlight">{{ projectStats.total }}</span>
             </div>
             <div class="stat-item">
+              <span class="label">未开始</span>
+              <span class="value primary">{{ projectStats.active }}</span>
+            </div>
+            <div class="stat-item">
               <span class="label">进行中</span>
               <span class="value primary">{{ projectStats.active }}</span>
             </div>
