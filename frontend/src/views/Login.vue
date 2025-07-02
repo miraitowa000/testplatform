@@ -34,6 +34,7 @@ const handleLogin = async () => {
         const token = res.data?.token
         if (token) {
           localStorage.setItem('token', token)
+          localStorage.setItem('user_id', JSON.stringify(res.data.user.id))
           ElMessage.success('登录成功')
           await router.push('/dashboard')
         } else {

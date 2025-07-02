@@ -21,6 +21,7 @@ const handleDropdown = async (command) => {
     try {
       await userApi.logout()
       localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
       ElMessage.success('已退出登录')
       router.push('/login')
     } catch (e) {

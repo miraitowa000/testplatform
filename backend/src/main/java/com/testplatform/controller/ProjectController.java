@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "项目管理", description = "项目相关接口")
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("/api/projects")
 @PreAuthorize("isAuthenticated()")
 @Validated
 public class ProjectController {

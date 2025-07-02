@@ -13,7 +13,7 @@ const projectApi = {
   // 创建项目
   createProject(data) {
     return request({
-      url: '/projects',
+      url: '/projects/create',
       method: 'post',
       data
     })

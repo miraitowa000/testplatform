@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { projectApi } from '@/api'
 
 const projects = ref([
   {
@@ -34,9 +36,26 @@ const handleAdd = () => {
   dialogVisible.value = true
 }
 
-const handleSubmit = () => {
-  // TODO: 提交表单逻辑
-  dialogVisible.value = false
+const handleSubmit = async () => {
+  try {
+    const user_id = JSON.parse(localStorage.getItem('user_id') || '{}')
+    const formData = {
+      name: projectForm.value.name,
+      description: projectForm.value.description,
+      startDate: projectForm.value.startDate,
+      endDate: projectForm.value.endDate,
+      owner_id: user_id
+    }
+    const res = await projectApi.createProject(formData)
+    // 假设后端返回新项目数据在 res.data
+    projects.value.push(res.data)
+    dialogVisible.value = false
+    ElMessage.success('项目创建成功')
+    // 清空表单
+    projectForm.value = { name: '', description: '', startDate: '', endDate: '' }
+  } catch (error) {
+    ElMessage.error(error.message || '项目创建失败')
+  }
 }
 </script>
 
