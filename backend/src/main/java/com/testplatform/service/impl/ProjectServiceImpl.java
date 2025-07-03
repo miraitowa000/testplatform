@@ -10,6 +10,7 @@ import com.testplatform.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,6 +20,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public ResultVO createProject(ProjectDTO projectDTO) {
         Project project = new Project();
         BeanUtils.copyProperties(projectDTO, project);
+        
+        // 根据开始时间和结束时间计算项目状态
+        project.setStatus(calculateProjectStatus(projectDTO.getStartTime(), projectDTO.getEndTime()));
+        
+        // 设置创建时间和更新时间
+        Date now = new Date();
+        project.setCreateTime(now);
+        project.setUpdateTime(now);
+        
         if (save(project)) {
             return new ResultVO(200, "创建项目成功", project);
         }
@@ -32,6 +42,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return new ResultVO(404, "项目不存在", null);
         }
         BeanUtils.copyProperties(projectDTO, project);
+        
+        // 根据开始时间和结束时间重新计算项目状态
+        project.setStatus(calculateProjectStatus(projectDTO.getStartTime(), projectDTO.getEndTime()));
+        
+        // 设置更新时间
+        project.setUpdateTime(new Date());
+        
         if (updateById(project)) {
             return new ResultVO(200, "更新项目成功", project);
         }
@@ -71,5 +88,28 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         queryWrapper.eq(Project::getOwnerId, ownerId);
         List<Project> projects = list(queryWrapper);
         return new ResultVO(200, "获取项目列表成功", projects);
+    }
+
+    /**
+     * 根据开始时间和结束时间计算项目状态
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 项目状态：0-未开始，1-进行中，2-已完成
+     */
+    private Integer calculateProjectStatus(Date startTime, Date endTime) {
+        Date now = new Date();
+        
+        // 如果开始时间晚于当前时间，项目未开始
+        if (startTime.after(now)) {
+            return 0; // 未开始
+        }
+        
+        // 如果结束时间早于或等于当前时间，项目已完成
+        if (endTime.before(now) || endTime.equals(now)) {
+            return 2; // 已完成
+        }
+        
+        // 如果开始时间早于或等于当前时间，且结束时间晚于当前时间，项目进行中
+        return 1; // 进行中
     }
 }
