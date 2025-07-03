@@ -13,8 +13,34 @@ const projectForm = ref({
   endTime: ''
 })
 
+const isEdit = ref(false)
+const editProjectId = ref(null)
+
 const handleAdd = () => {
+  isEdit.value = false
+  projectForm.value = { name: '', description: '', startTime: '', endTime: '' }
   dialogVisible.value = true
+}
+
+const handleEdit = (project) => {
+  isEdit.value = true
+  editProjectId.value = project.id
+  projectForm.value = {
+    name: project.name,
+    description: project.description,
+    startTime: project.startTime,
+    endTime: project.endTime
+  }
+  dialogVisible.value = true
+}
+
+function formatDate(date) {
+  if (!date) return ''
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 const handleSubmit = async () => {
@@ -23,19 +49,27 @@ const handleSubmit = async () => {
     const formData = {
       name: projectForm.value.name,
       description: projectForm.value.description,
-      startTime: projectForm.value.startTime,
-      endTime: projectForm.value.endTime,
+      startTime: formatDate(projectForm.value.startTime),
+      endTime: formatDate(projectForm.value.endTime),
       ownerId: user_id
     }
-    const res = await projectApi.createProject(formData)
-    // 假设后端返回新项目数据在 res.data
-    projects.value.push(res.data)
+    let res
+    if (isEdit.value && editProjectId.value) {
+      res = await projectApi.updateProject(editProjectId.value, formData)
+      // 更新本地 projects 列表
+      const idx = projects.value.findIndex(p => p.id === editProjectId.value)
+      if (idx !== -1) projects.value[idx] = { ...projects.value[idx], ...res.data }
+      ElMessage.success('项目编辑成功')
+    } else {
+      res = await projectApi.createProject(formData)
+      projects.value.push(res.data)
+      ElMessage.success('项目创建成功')
+    }
     dialogVisible.value = false
-    ElMessage.success('项目创建成功')
     // 清空表单
     projectForm.value = { name: '', description: '', startTime: '', endTime: '' }
   } catch (error) {
-    ElMessage.error(error.message || '项目创建失败')
+    ElMessage.error(error.message || (isEdit.value ? '项目编辑失败' : '项目创建失败'))
   }
 }
 
@@ -117,7 +151,7 @@ onMounted(async () => {
           </div>
           
           <div class="actions">
-            <el-button type="primary" link>
+            <el-button type="primary" link @click="handleEdit(project)">
               <el-icon><Edit /></el-icon>编辑
             </el-button>
             <el-button type="primary" link>
@@ -133,7 +167,7 @@ onMounted(async () => {
 
     <el-dialog
       v-model="dialogVisible"
-      title="新建项目"
+      :title="isEdit ? '编辑项目' : '新建项目'"
       width="50%"
     >
       <el-form :model="projectForm" label-width="100px">
