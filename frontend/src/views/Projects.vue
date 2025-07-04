@@ -279,4 +279,13 @@ onMounted(async () => {
   gap: 15px;
   margin-top: 10px;
 }
+
+.avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  border: 1px solid #eee;
+}
 </style>
