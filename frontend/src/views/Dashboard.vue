@@ -32,6 +32,7 @@ const fetchDashboardData = async () => {
     const { data } = await statsApi.getDashboardStats()
     projectStats.value = {
       total: data.projectStats.total,
+      notstarted: data.projectStats.notstarted,
       active: data.projectStats.ongoing,
       completed: data.projectStats.completed
     }
@@ -154,7 +155,7 @@ onBeforeUnmount(() => {
             </div>
             <div class="stat-item">
               <span class="label">未开始</span>
-              <span class="value primary">{{ projectStats.active }}</span>
+              <span class="value primary">{{ projectStats.notstarted }}</span>
             </div>
             <div class="stat-item">
               <span class="label">进行中</span>
