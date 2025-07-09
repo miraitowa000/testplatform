@@ -85,7 +85,6 @@ const handleDelete = (project) => {
   ).then(async () => {
     try {
       await projectApi.deleteProject(project.id)
-      // 从本地 projects 列表移除
       projects.value = projects.value.filter(p => p.id !== project.id)
       ElMessage.success('删除成功')
     } catch (error) {
@@ -142,51 +141,48 @@ onMounted(async () => {
     </div>
 
     <div class="project-list">
-      <template v-if="projects.length > 0">
-        <el-card v-for="project in projects" :key="project.id" class="project-card">
-          <template #header>
-            <div class="card-header">
-              <h3>{{ project.name }}</h3>
-              <el-tag :type="statusTagType(project.status)">
-                {{ statusText(project.status) }}
-              </el-tag>
-            </div>
-          </template>
+      <el-card v-for="project in projects" :key="project.id" class="project-card">
+        <template #header>
+          <div class="card-header">
+            <h3>{{ project.name }}</h3>
+            <el-tag :type="statusTagType(project.status)">
+              {{ statusText(project.status) }}
+            </el-tag>
+          </div>
+        </template>
+        
+        <div class="project-info">
+          <p class="description">{{ project.description }}</p>
           
-          <div class="project-info">
-            <p class="description">{{ project.description }}</p>
-            
-            <div class="progress-section">
-              <span class="label">项目进度</span>
-              <el-progress :percentage="getProgress(project)" />
+          <div class="progress-section">
+            <span class="label">项目进度</span>
+            <el-progress :percentage="getProgress(project)" />
+          </div>
+          
+          <div class="date-section">
+            <div class="date-item">
+              <span class="label">开始日期</span>
+              <span>{{ project.startTime }}</span>
             </div>
-            
-            <div class="date-section">
-              <div class="date-item">
-                <span class="label">开始日期</span>
-                <span>{{ project.startTime }}</span>
-              </div>
-              <div class="date-item">
-                <span class="label">结束日期</span>
-                <span>{{ project.endTime }}</span>
-              </div>
-            </div>
-            
-            <div class="actions">
-              <el-button type="primary" link @click="handleEdit(project)">
-                <el-icon><Edit /></el-icon>编辑
-              </el-button>
-              <el-button type="primary" link>
-                <el-icon><View /></el-icon>查看详情
-              </el-button>
-              <el-button type="danger" link @click="handleDelete(project)">
-                <el-icon><Delete /></el-icon>删除
-              </el-button>
+            <div class="date-item">
+              <span class="label">结束日期</span>
+              <span>{{ project.endTime }}</span>
             </div>
           </div>
-        </el-card>
-      </template>
-      <el-empty v-else description="暂无项目数据" />
+          
+          <div class="actions">
+            <el-button type="primary" link @click="handleEdit(project)">
+              <el-icon><Edit /></el-icon>编辑
+            </el-button>
+            <el-button type="primary" link>
+              <el-icon><View /></el-icon>查看详情
+            </el-button>
+            <el-button type="danger" link @click="handleDelete(project)">
+              <el-icon><Delete /></el-icon>删除
+            </el-button>
+          </div>
+        </div>
+      </el-card>
     </div>
 
     <el-dialog
@@ -242,12 +238,9 @@ onMounted(async () => {
 }
 
 .project-list {
-  min-height: 300px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  justify-content: center;
-  align-items: center;
 }
 
 .project-card {
