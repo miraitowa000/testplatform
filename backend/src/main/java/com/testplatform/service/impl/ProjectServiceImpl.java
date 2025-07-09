@@ -60,7 +60,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public ResultVO deleteProject(Long id) {
-        if (removeById(id)) {
+        Project project = getById(id);
+        if (project == null) {
+            return new ResultVO(404, "项目不存在", null);
+        }
+        
+        // 设置删除时间戳（转换为秒级时间戳，避免超出数据库 BIGINT 范围）
+        project.setDeletedAt(System.currentTimeMillis() / 1000L);
+        
+        if (updateById(project)) {
             return new ResultVO(200, "删除项目成功", null);
         }
         return new ResultVO(500, "删除项目失败", null);

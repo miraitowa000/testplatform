@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { projectApi } from '@/api'
 
 const projects = ref([])
@@ -71,6 +71,27 @@ const handleSubmit = async () => {
   } catch (error) {
     ElMessage.error(error.message || (isEdit.value ? '项目编辑失败' : '项目创建失败'))
   }
+}
+
+const handleDelete = (project) => {
+  ElMessageBox.confirm(
+    `确定要删除项目「${project.name}」吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    try {
+      await projectApi.deleteProject(project.id)
+      // 从本地 projects 列表移除
+      projects.value = projects.value.filter(p => p.id !== project.id)
+      ElMessage.success('删除成功')
+    } catch (error) {
+      ElMessage.error(error.message || '删除失败')
+    }
+  }).catch(() => {})
 }
 
 const statusText = status => {
@@ -157,7 +178,7 @@ onMounted(async () => {
             <el-button type="primary" link>
               <el-icon><View /></el-icon>查看详情
             </el-button>
-            <el-button type="danger" link>
+            <el-button type="danger" link @click="handleDelete(project)">
               <el-icon><Delete /></el-icon>删除
             </el-button>
           </div>
