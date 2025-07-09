@@ -140,7 +140,7 @@ onMounted(async () => {
       </el-button>
     </div>
 
-    <div class="project-list">
+    <div class="project-list" v-if="projects.length > 0">
       <el-card v-for="project in projects" :key="project.id" class="project-card">
         <template #header>
           <div class="card-header">
@@ -183,6 +183,9 @@ onMounted(async () => {
           </div>
         </div>
       </el-card>
+    </div>
+    <div v-else class="empty-wrapper">
+      <el-empty description="暂无数据" />
     </div>
 
     <el-dialog
@@ -307,5 +310,12 @@ onMounted(async () => {
   object-fit: cover;
   margin-right: 8px;
   border: 1px solid #eee;
+}
+
+.empty-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
 }
 </style>
