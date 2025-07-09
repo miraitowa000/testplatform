@@ -52,8 +52,10 @@ public class DashboardServiceImpl implements DashboardService {
         // 获取当前时间
         Date now = new Date();
 
-        // 查询所有项目
-        List<Project> projects = projectService.list();
+        // 查询所有未删除的项目
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Project::getDeletedAt, 0L);
+        List<Project> projects = projectService.list(queryWrapper);
 
         // 统计项目状态
         int totalProjects = projects.size();

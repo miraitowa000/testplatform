@@ -23,6 +23,8 @@ public class ProjectDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
     
+    private Long deletedAt;
+    
     @NotNull(message = "结束时间不能为空")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

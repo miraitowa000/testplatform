@@ -25,6 +25,9 @@ public class Project {
     @TableField("owner_id")
     private Long ownerId;
     
+    @TableField("deleted_at")
+    private Long deletedAt;
+    
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @TableField("start_time")

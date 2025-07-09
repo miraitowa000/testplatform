@@ -29,6 +29,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         project.setCreateTime(now);
         project.setUpdateTime(now);
         
+        // 设置删除标记为0（未删除）
+        project.setDeletedAt(0L);
+        
         if (save(project)) {
             return new ResultVO(200, "创建项目成功", project);
         }
@@ -65,16 +68,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public ResultVO getProjectById(Long id) {
-        Project project = getById(id);
-        if (project != null) {
-            return new ResultVO(200, "获取项目成功", project);
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Project::getId, id)
+                  .eq(Project::getDeletedAt, 0L);
+        Project project = getOne(queryWrapper);
+        if (project == null) {
+            return new ResultVO(404, "项目不存在", null);
         }
-        return new ResultVO(404, "项目不存在", null);
+        return new ResultVO(200, "获取项目成功", project);
     }
 
     @Override
     public ResultVO listProjects(Integer status) {
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        // 只查询未删除的项目
+        queryWrapper.eq(Project::getDeletedAt, 0L);
         if (status != null) {
             queryWrapper.eq(Project::getStatus, status);
         }
