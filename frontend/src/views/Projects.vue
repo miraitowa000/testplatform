@@ -44,6 +44,15 @@ function formatDate(date) {
 }
 
 const handleSubmit = async () => {
+  // 校验必填项
+  if (!projectForm.value.name.trim()) {
+    ElMessage.warning('项目名称不能为空')
+    return
+  }
+  if (!projectForm.value.startTime || !projectForm.value.endTime) {
+    ElMessage.warning('起止时间不能为空')
+    return
+  }
   try {
     const user_id = JSON.parse(localStorage.getItem('user_id') || '{}')
     const formData = {
@@ -191,11 +200,16 @@ onMounted(async () => {
     <el-dialog
       v-model="dialogVisible"
       :title="isEdit ? '编辑项目' : '新建项目'"
-      width="50%"
+      width="500px"
     >
       <el-form :model="projectForm" label-width="100px">
         <el-form-item label="项目名称">
-          <el-input v-model="projectForm.name" placeholder="请输入项目名称" />
+          <el-input
+            v-model="projectForm.name"
+            placeholder="请输入项目名称"
+            maxlength="20"
+            show-word-limit
+          />
         </el-form-item>
         <el-form-item label="项目描述">
           <el-input
