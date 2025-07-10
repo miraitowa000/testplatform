@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
 
 const activeTab = ref('collections')
 
@@ -31,6 +32,10 @@ const currentApi = ref({
   body: ''
 })
 
+const responseData = ref('')
+const responseStatus = ref('')
+const responseTime = ref('')
+
 const addHeader = () => {
   currentApi.value.headers.push({ key: '', value: '' })
 }
@@ -47,8 +52,49 @@ const removeParam = (index) => {
   currentApi.value.params.splice(index, 1)
 }
 
-const sendRequest = () => {
-  // TODO: 实现发送请求逻辑
+const sendRequest = async () => {
+  const token = localStorage.getItem('token')
+  // 组装 headers
+  const headersObj = {}
+  currentApi.value.headers.forEach(h => {
+    if (h.key) headersObj[h.key] = h.value
+  })
+  // 组装 params
+  const paramsObj = {}
+  currentApi.value.params.forEach(p => {
+    if (p.key) paramsObj[p.key] = p.value
+  })
+  // 组装 body
+  let bodyObj = {}
+  try {
+    bodyObj = currentApi.value.body ? JSON.parse(currentApi.value.body) : {}
+  } catch {
+    bodyObj = {}
+  }
+
+  const payload = {
+    method: currentApi.value.method.toLowerCase(),
+    url: currentApi.value.url,
+    headers: headersObj,
+    params: paramsObj,
+    body: bodyObj
+  }
+
+  const start = Date.now()
+  try {
+    const res = await axios.post('/api/test/execute', payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    responseData.value = JSON.stringify(res.data, null, 2)
+    responseStatus.value = `${res.status} ${res.statusText}`
+    responseTime.value = `${Date.now() - start} ms`
+  } catch (err) {
+    responseData.value = err.response ? JSON.stringify(err.response.data, null, 2) : err.message
+    responseStatus.value = err.response ? `${err.response.status} ${err.response.statusText}` : '请求失败'
+    responseTime.value = `${Date.now() - start} ms`
+  }
 }
 </script>
 
@@ -149,8 +195,8 @@ const sendRequest = () => {
           <div class="response-header">
             <h3>响应结果</h3>
             <div class="response-status">
-              <el-tag type="success">200 OK</el-tag>
-              <span>100 ms</span>
+              <el-tag :type="responseStatus.startsWith('2') ? 'success' : 'danger'">{{ responseStatus }}</el-tag>
+              <span>{{ responseTime }}</span>
             </div>
           </div>
           <el-input
@@ -158,6 +204,7 @@ const sendRequest = () => {
             :rows="15"
             placeholder="响应内容"
             readonly
+            v-model="responseData"
           />
         </div>
       </el-main>
