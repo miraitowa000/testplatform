@@ -18,6 +18,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public ResultVO createProject(ProjectDTO projectDTO) {
+        if (isProjectNameDuplicate(projectDTO.getName(), null)) {
+            return new ResultVO(400, "项目名称已存在，请使用其他名称", null);
+        }
+
         Project project = new Project();
         BeanUtils.copyProperties(projectDTO, project);
         
@@ -40,6 +44,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public ResultVO updateProject(Long id, ProjectDTO projectDTO) {
+        if (isProjectNameDuplicate(projectDTO.getName(), null)) {
+            return new ResultVO(400, "项目名称已存在，请使用其他名称", null);
+        }
         Project project = getById(id);
         if (project == null) {
             return new ResultVO(404, "项目不存在", null);
@@ -128,4 +135,23 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         // 如果开始时间早于或等于当前时间，且结束时间晚于当前时间，项目进行中
         return 1; // 进行中
     }
+    /**
+     * 检查项目名称是否重复
+     * @param projectName 项目名称
+     * @param excludeId 排除的项目ID（更新时使用，创建时传null）
+     * @return true表示重复，false表示不重复
+     */
+    private boolean isProjectNameDuplicate(String projectName, Long excludeId) {
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Project::getName, projectName)
+                .eq(Project::getDeletedAt, 0L); // 只检查未删除的项目
+
+        // 如果是更新操作，排除当前项目ID
+        if (excludeId != null) {
+            queryWrapper.ne(Project::getId, excludeId);
+        }
+
+        return count(queryWrapper) > 0;
+    }
+
 }
