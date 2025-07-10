@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { testApi } from '@/api'
 
 const activeTab = ref('collections')
 
@@ -82,17 +82,13 @@ const sendRequest = async () => {
 
   const start = Date.now()
   try {
-    const res = await axios.post('/api/test/execute', payload, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    responseData.value = JSON.stringify(res.data, null, 2)
-    responseStatus.value = `${res.status} ${res.statusText}`
+    const res = await testApi.executeTest(payload)
+    responseData.value = JSON.stringify(res, null, 2)
+    responseStatus.value = '200 OK'
     responseTime.value = `${Date.now() - start} ms`
   } catch (err) {
-    responseData.value = err.response ? JSON.stringify(err.response.data, null, 2) : err.message
-    responseStatus.value = err.response ? `${err.response.status} ${err.response.statusText}` : '请求失败'
+    responseData.value = err.message || '请求失败'
+    responseStatus.value = '请求失败'
     responseTime.value = `${Date.now() - start} ms`
   }
 }

@@ -1,4 +1,5 @@
 import request from '../utils/request'
+import testApi from './testApi'
 
 // 项目相关接口
 const projectApi = {
@@ -168,4 +169,4 @@ const userApi = {
   }
 }
 
-export { userApi, projectApi, apiTestingApi, defectApi, statsApi }
+export { userApi, projectApi, apiTestingApi, defectApi, statsApi, testApi }
