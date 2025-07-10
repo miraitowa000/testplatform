@@ -41,13 +41,20 @@ public class ApiTestServiceImpl implements ApiTestService {
             // 根据Content-Type处理请求体
             String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
             if (apiTestDTO.getBody() != null) {
-                if (contentType != null && contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
-                    requestBody = apiTestDTO.getBody();
-                } else {
-                    // 对于非JSON类型的请求体，直接使用字符串
+                // 默认使用JSON格式，除非明确指定其他格式
+                if (contentType != null && !contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
+                    // 对于明确指定的非JSON类型，使用字符串格式
                     requestBody = apiTestDTO.getBody().toString();
+                } else {
+                    // 默认使用JSON格式或者Content-Type包含JSON
+                    requestBody = apiTestDTO.getBody();
+                    // 如果没有设置Content-Type，自动设置为JSON
+                    if (contentType == null) {
+                        headers.setContentType(MediaType.APPLICATION_JSON);
+                    }
                 }
             }
+
 
             HttpEntity<?> requestEntity = new HttpEntity<>(requestBody, headers);
 
